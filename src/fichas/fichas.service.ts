@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import * as mongoose  from 'mongoose';
 import { FichaDTO } from './dto/ficha.dto';
 import { IFicha } from './interface/ficha.interface';
 
@@ -11,9 +12,44 @@ export class FichasService {
     
     // Ficha por ID
     async getFicha(id: string): Promise<IFicha> {
-        const ficha = await this.fichaModel.findById(id);
-        if(!ficha) throw new NotFoundException('La ficha no existe');
-        return ficha;
+
+        const fichaDB = await this.fichaModel.findById(id);
+        if(!fichaDB) throw new NotFoundException('La ficha no existe');
+  
+        const pipeline = [];
+  
+        // Ficha por ID
+        const idFicha = new mongoose.Types.ObjectId(id);
+        pipeline.push({ $match:{ _id: idFicha} }) 
+    
+        // Informacion de usuario creador
+        pipeline.push({
+          $lookup: { // Lookup
+              from: 'usuarios',
+              localField: 'creatorUser',
+              foreignField: '_id',
+              as: 'creatorUser'
+          }}
+        );
+  
+        pipeline.push({ $unwind: '$creatorUser' });
+  
+        // Informacion de usuario actualizador
+        pipeline.push({
+          $lookup: { // Lookup
+              from: 'usuarios',
+              localField: 'updatorUser',
+              foreignField: '_id',
+              as: 'updatorUser'
+          }}
+        );
+  
+        pipeline.push({ $unwind: '$updatorUser' });
+  
+        const ficha = await this.fichaModel.aggregate(pipeline);
+        
+        return ficha[0];
+
     } 
 
     // Listar fichas 
@@ -21,12 +57,44 @@ export class FichasService {
         
         const {columna, direccion} = querys;
 
-        // Ordenar
-        let ordenar = [columna || 'apellido', direccion || 1];
-
-        const fichas = await this.fichaModel.find()
-                                            .sort([ordenar]);
+        const pipeline = [];
+        pipeline.push({$match:{}});
+  
+        // Informacion de usuario creador
+        pipeline.push({
+          $lookup: { // Lookup
+              from: 'usuarios',
+              localField: 'creatorUser',
+              foreignField: '_id',
+              as: 'creatorUser'
+          }}
+        );
+  
+        pipeline.push({ $unwind: '$creatorUser' });
+  
+        // Informacion de usuario actualizador
+        pipeline.push({
+          $lookup: { // Lookup
+            from: 'usuarios',
+            localField: 'updatorUser',
+            foreignField: '_id',
+            as: 'updatorUser'
+          }}
+        );
+  
+        pipeline.push({ $unwind: '$updatorUser' });
+  
+        // Ordenando datos
+        const ordenar: any = {};
+        if(columna){
+            ordenar[String(columna)] = Number(direccion);
+            pipeline.push({$sort: ordenar});
+        }      
+  
+        const fichas = await this.fichaModel.aggregate(pipeline);
+        
         return fichas;
+
     }  
 
     // Crear ficha
