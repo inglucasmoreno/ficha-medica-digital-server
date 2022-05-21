@@ -56,18 +56,18 @@ export class FichasController {
             ficha
         });
     
-        }
+    }
 
         
-        // Actualizar ficha
-        @UseGuards(JwtAuthGuard)
-        @ApiBearerAuth()
-        @ApiOkResponse({ description: 'Ficha actualizada correctamente' })
-        @ApiUnauthorizedResponse({ description: 'El usuario no esta autorizado para realizar esta accion' })
-        @ApiParam({name: 'id', required: true, description: 'Identificador de ficha', type: 'string'})
-        @Put('/:id')
-        async actualizarFicha(@Res() res, @Body() fichaUpdateDTO: FichaUpdateDTO, @Param('id') fichaID ) {
-            
+    // Actualizar ficha
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @ApiOkResponse({ description: 'Ficha actualizada correctamente' })
+    @ApiUnauthorizedResponse({ description: 'El usuario no esta autorizado para realizar esta accion' })
+    @ApiParam({name: 'id', required: true, description: 'Identificador de ficha', type: 'string'})
+    @Put('/:id')
+    async actualizarFicha(@Res() res, @Body() fichaUpdateDTO: FichaUpdateDTO, @Param('id') fichaID ) {
+        
         const ficha = await this.fichasService.actualizarFicha(fichaID, fichaUpdateDTO);
 
         res.status(HttpStatus.OK).json({
@@ -76,4 +76,23 @@ export class FichasController {
         });
 
     }
+
+    // Reporte de fichas medicas
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @ApiCreatedResponse({ description: 'Reporte generado correctamente' })
+    @ApiUnauthorizedResponse({ description: 'El usuario no esta autorizado para realizar esta accion' })
+    @ApiBody({})
+    @Post('/pdf/reporte')
+    async reporteFichas(@Res() res, @Body() data: any ) {
+
+        // Se genera el reporte de fichas (PDF)
+        await this.fichasService.reporteFichas(data);        
+        res.status(HttpStatus.CREATED).json({
+            message: 'Reporte generado correctamente'
+        });
+    
+    }
+
+
 }

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    
+<link rel="stylesheet" href="template.css">
+
+<style>
+    
+    /* CSS de PDF */
+    
+    * {
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+</style>
+
+<head>
+    <mate charest="utf-8" />
+    <title> Formulario auto </title>
+</head>
+
+<body style="font-family: Arial, Helvetica, sans-serif;">
+    <div style="font-size: 20px; font-weight: bold;"> Reporte de fichas medicas </div>
+    <div style="font-size: 12px"> Fecha de reporte: 12/10/2022 </div>
+    <table style="width: 100%; margin-top: 10px; border-collapse: collapse;">
+        <tr style="border-bottom: 1px black solid;">
+            <td style="font-size: 13px; font-weight: 700; border-bottom: 1px black solid;"> Apellido y Nombre </td>
+            <td style="font-size: 13px; font-weight: 700; border-bottom: 1px black solid;"> DNI </td>
+            <td style="font-size: 13px; font-weight: 700; border-bottom: 1px black solid;"> N° Afiliado </td>
+            <td style="font-size: 13px; font-weight: 700; border-bottom: 1px black solid;"> Fecha de nacimiento </td>
+            <td style="font-size: 13px; font-weight: 700; border-bottom: 1px black solid;"> Fecha de alta </td>
+        </tr>  
+        {{#each fichas}}
+        <tr>
+            <td style="font-size: 13px; padding-top: 5px;"> {{ apellido }} {{ nombre }} </td>
+            <td style="font-size: 13px"> {{ dni }} </td>
+            <td style="font-size: 13px"> {{ nro_afiliado }} </td>
+            <td style="font-size: 13px"> {{ fecha_nacimiento_string }} </td>
+            <td style="font-size: 13px"> {{ fecha_alta_string }} </td>
+        </tr>    
+        {{/each}}
+    </table>
+</body>
+
+</html>

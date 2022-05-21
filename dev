@@ -1,0 +1,39 @@
+
+> server@0.0.1 start C:\Empresa\Proyectos\ficha-medica-digital\server
+> nest start
+
+[2022-05-13T22:29:05.378Z] [32minfo[39m 	[32mStarting Nest application...[39m
+[2022-05-13T22:29:05.414Z] [32minfo[39m 	[32mMongoModule dependencies initialized[39m
+[2022-05-13T22:29:05.414Z] [32minfo[39m 	[32mMongooseModule dependencies initialized[39m
+[2022-05-13T22:29:05.414Z] [32minfo[39m 	[32mPassportModule dependencies initialized[39m
+[2022-05-13T22:29:05.415Z] [32minfo[39m 	[32mSocketModule dependencies initialized[39m
+[2022-05-13T22:29:05.415Z] [32minfo[39m 	[32mJwtModule dependencies initialized[39m
+[2022-05-13T22:29:05.416Z] [32minfo[39m 	[32mConfigHostModule dependencies initialized[39m
+[2022-05-13T22:29:05.416Z] [32minfo[39m 	[32mServeStaticModule dependencies initialized[39m
+[2022-05-13T22:29:05.421Z] [32minfo[39m 	[32mConfigModule dependencies initialized[39m
+[2022-05-13T22:29:05.446Z] [32minfo[39m 	[32mMongooseCoreModule dependencies initialized[39m
+[2022-05-13T22:29:05.454Z] [32minfo[39m 	[32mMongooseModule dependencies initialized[39m
+[2022-05-13T22:29:05.454Z] [32minfo[39m 	[32mMongooseModule dependencies initialized[39m
+[2022-05-13T22:29:05.455Z] [32minfo[39m 	[32mInicializacionModule dependencies initialized[39m
+[2022-05-13T22:29:05.455Z] [32minfo[39m 	[32mAuthModule dependencies initialized[39m
+[2022-05-13T22:29:05.455Z] [32minfo[39m 	[32mAppModule dependencies initialized[39m
+[2022-05-13T22:29:05.456Z] [32minfo[39m 	[32mUsuariosModule dependencies initialized[39m
+[2022-05-13T22:29:05.456Z] [32minfo[39m 	[32mFichasModule dependencies initialized[39m
+[2022-05-13T22:29:06.083Z] [32minfo[39m 	[32mSocketGateway subscribed to the "testing" message[39m
+[2022-05-13T22:29:06.084Z] [32minfo[39m 	[32mAppController {/}:[39m
+[2022-05-13T22:29:06.086Z] [32minfo[39m 	[32mMapped {/auth/login, POST} route[39m
+[2022-05-13T22:29:06.086Z] [32minfo[39m 	[32mMapped {/profile, GET} route[39m
+[2022-05-13T22:29:06.087Z] [32minfo[39m 	[32mUsuariosController {/usuarios}:[39m
+[2022-05-13T22:29:06.087Z] [32minfo[39m 	[32mMapped {/usuarios/:id, GET} route[39m
+[2022-05-13T22:29:06.087Z] [32minfo[39m 	[32mMapped {/usuarios, GET} route[39m
+[2022-05-13T22:29:06.088Z] [32minfo[39m 	[32mMapped {/usuarios, POST} route[39m
+[2022-05-13T22:29:06.088Z] [32minfo[39m 	[32mMapped {/usuarios/:id, PUT} route[39m
+[2022-05-13T22:29:06.088Z] [32minfo[39m 	[32mInicializacionController {/inicializacion}:[39m
+[2022-05-13T22:29:06.089Z] [32minfo[39m 	[32mMapped {/inicializacion/usuarios, GET} route[39m
+[2022-05-13T22:29:06.089Z] [32minfo[39m 	[32mFichasController {/fichas}:[39m
+[2022-05-13T22:29:06.089Z] [32minfo[39m 	[32mMapped {/fichas/:id, GET} route[39m
+[2022-05-13T22:29:06.089Z] [32minfo[39m 	[32mMapped {/fichas, GET} route[39m
+[2022-05-13T22:29:06.090Z] [32minfo[39m 	[32mMapped {/fichas, POST} route[39m
+[2022-05-13T22:29:06.090Z] [32minfo[39m 	[32mMapped {/fichas/:id, PUT} route[39m
+[2022-05-13T22:29:06.094Z] [32minfo[39m 	[32mNest application successfully started[39m
+¿Desea terminar el trabajo por lotes (S/N)? 

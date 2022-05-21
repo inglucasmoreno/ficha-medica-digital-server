@@ -4,10 +4,16 @@ import { Model } from 'mongoose';
 import * as mongoose  from 'mongoose';
 import { FichaDTO } from './dto/ficha.dto';
 import { IFicha } from './interface/ficha.interface';
+import * as fs from 'fs';
+import * as pdf from 'pdf-creator-node';
+import { add, format } from 'date-fns';
 
 @Injectable()
 export class FichasService {
     
+    public url_template_reporte_fichas = process.env.URL_TEMPLATE_REPORTE_FICHAS || './pdf/template/reporte_fichas_medicas.html';
+    public url_destino_pdf_reporte_fichas = process.env.URL_DESTINO_PDF_REPORTE_FICHAS || './public/pdf/reporte_fichas_medicas.pdf';
+
     constructor(@InjectModel('Ficha') private readonly fichaModel: Model<IFicha>){}
     
     // Ficha por ID
@@ -99,19 +105,87 @@ export class FichasService {
 
     // Crear ficha
     async crearFicha(fichaDTO: FichaDTO): Promise<IFicha> {
+
+        const { dni, nro_afiliado } = fichaDTO;
+
+        // Verificamos que el DNI no este repetido
+        const nroAfiliadoDB = await this.fichaModel.findOne({ nro_afiliado });
+        if(nroAfiliadoDB) throw new NotFoundException('El Nro de afiliado ya se encuentra registrado');
+
+        // Verificamos que el DNI no este repetido
+        const dniDB = await this.fichaModel.findOne({ dni });
+        if(dniDB) throw new NotFoundException('El DNI ya se encuentra registrado');
+
+        // Se crea la ficha medica
         const nuevaFicha = new this.fichaModel(fichaDTO);
         return await nuevaFicha.save();
-    }
+    
+      }
 
     // Actualizar ficha
     async actualizarFicha(id: string, fichaUpdateDTO: any): Promise<IFicha> {
 
+        const { dni, nro_afiliado } = fichaUpdateDTO; 
+
+        // Se verifica si la ficha a actualizar existe
         let fichaDB = await this.getFicha(id);
         if(!fichaDB) throw new NotFoundException('La ficha no existe');
+
+        // Verificacion: Nro de afiliado repetido
+        if(nro_afiliado && fichaDB.nro_afiliado !== nro_afiliado){
+          const dniRepetido = await this.fichaModel.findOne({ dni });
+          if(dniRepetido) throw new NotFoundException('El Nro de afiliado ya se encuentra registrado');
+        }
+
+        // Verificacion: DNI repetido
+        if(dni && fichaDB.dni !== dni){
+          const dniRepetido = await this.fichaModel.findOne({ dni });
+          if(dniRepetido) throw new NotFoundException('El DNI ya se encuentra registrado');
+        }
 
         const ficha = await this.fichaModel.findByIdAndUpdate(id, fichaUpdateDTO, {new: true});
         return ficha;
         
+    }
+
+    
+    // Imprimir fichas
+    async reporteFichas(data: any): Promise<String> {
+
+      // Tempalte
+      var html = fs.readFileSync(this.url_template_reporte_fichas, 'utf-8')
+
+      // Opciones de documento
+      var options = {
+        format: 'A4',
+        orientation: 'portrait',
+        border: "10mm",
+        footer: {
+          height: "28mm",
+          contents: {}
+        }
+      }
+
+      // Cambio de formato de fechas
+      data.map( ficha => {
+        ficha.fecha_alta_string = format(add(new Date(ficha.createdAt),{hours: 5}),'dd/MM/yyyy');
+        ficha.fecha_nacimiento_string = format(add(new Date(ficha.fecha_nacimiento),{hours: 5}),'dd/MM/yyyy');
+      })
+
+      // Configuraciones de documento
+      var document = {
+        html: html,
+        data: {
+          fichas: data
+        },
+        path: this.url_destino_pdf_reporte_fichas,
+        type: ""
+      }
+
+      // Generacion de PDF
+      await pdf.create(document, options);
+
+      return 'Reporte generado correctamente'
     }
     
 }
