@@ -12,6 +12,12 @@ import { join } from 'path';
 import { SocketModule } from './socket/socket.module';
 import { ConfigModule } from '@nestjs/config';
 import { FichasModule } from './fichas/fichas.module';
+import { NotasConsultaModule } from './notas-consulta/notas-consulta.module';
+import { AntecedentesModule } from './antecedentes/antecedentes.module';
+import { AlergiasModule } from './alergias/alergias.module';
+import { CirugiasModule } from './cirugias/cirugias.module';
+import { EstudiosModule } from './estudios/estudios.module';
+import { TurnosModule } from './turnos/turnos.module';
 
 @Module({
   imports: [
@@ -39,7 +45,7 @@ import { FichasModule } from './fichas/fichas.module';
     UsuariosModule, 
     AuthModule,
     InicializacionModule,  // Para inicializacion de tablas - Configurable en el controlador/servicio
-    SocketModule, FichasModule,          // Para trabajar con WebSocket
+    SocketModule, FichasModule, NotasConsultaModule, AntecedentesModule, AlergiasModule, CirugiasModule, EstudiosModule, TurnosModule,          // Para trabajar con WebSocket
     
   ],
   
