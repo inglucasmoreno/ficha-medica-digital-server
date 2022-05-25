@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
 
 export class TurnoDTO {
-    
+
     @IsNotEmpty()
     @ApiProperty({ type: String, required: true, description: 'Identificador de ficha' })
     readonly ficha: string;
