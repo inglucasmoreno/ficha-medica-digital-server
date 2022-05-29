@@ -20,14 +20,14 @@ export const estudioSchema = new Schema({
       type: String,
       trim: true,
       uppercase: true,
-      required: true
+      default: ''
     },
 
     resultado: {
       type: String,
       trim: true,
       uppercase: true,
-      required: true
+      default: ''
     },
 
     creatorUser: {

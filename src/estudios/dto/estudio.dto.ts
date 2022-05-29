@@ -11,11 +11,9 @@ export class EstudioDTO {
     @ApiProperty({ type: String, required: true, description: 'Descripcion de estudio' })
     readonly descripcion: string;
 
-    @IsNotEmpty()
     @ApiProperty({ type: String, required: true, description: 'Laboratorio donde se hizo el estudio' })
     readonly laboratorio: string;
 
-    @IsNotEmpty()
     @ApiProperty({ type: String, required: true, description: 'Resultado del estudio' })
     readonly resultado: string;
 
