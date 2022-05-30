@@ -58,6 +58,47 @@ export class FichasService {
 
     } 
 
+    // Ficha por ID
+    async getFichaPorDNI(dni: string): Promise<IFicha> {
+
+      const fichaDB = await this.fichaModel.findOne({ dni });
+      if(!fichaDB) throw new NotFoundException('La ficha no existe');
+
+      const pipeline = [];
+
+      // Ficha por DNI
+      pipeline.push({ $match:{  dni } }) 
+  
+      // Informacion de usuario creador
+      pipeline.push({
+        $lookup: { // Lookup
+            from: 'usuarios',
+            localField: 'creatorUser',
+            foreignField: '_id',
+            as: 'creatorUser'
+        }}
+      );
+
+      pipeline.push({ $unwind: '$creatorUser' });
+
+      // Informacion de usuario actualizador
+      pipeline.push({
+        $lookup: { // Lookup
+            from: 'usuarios',
+            localField: 'updatorUser',
+            foreignField: '_id',
+            as: 'updatorUser'
+        }}
+      );
+
+      pipeline.push({ $unwind: '$updatorUser' });
+
+      const ficha = await this.fichaModel.aggregate(pipeline);
+      
+      return ficha[0];
+
+  } 
+
     // Listar fichas 
     async listarFichas(querys: any): Promise<IFicha[]> {
         

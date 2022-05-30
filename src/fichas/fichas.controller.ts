@@ -26,6 +26,21 @@ export class FichasController {
         });
     }
 
+    // Ficha por DNI
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @ApiOkResponse({ description: 'Ficha obtenieda correctamente' })
+    @ApiUnauthorizedResponse({ description: 'El usuario no esta autorizado para realizar esta accion' })
+    @ApiParam({name: 'dni', required: true, description: 'DNI de persona', type: 'string'})
+    @Get('/dni/:dni')
+    async getFichaPorDNI(@Res() res, @Param('dni') dni) {
+        const ficha = await this.fichasService.getFichaPorDNI(dni);
+        res.status(HttpStatus.OK).json({
+            message: 'Ficha obtenida correctamente',
+            ficha
+        });
+    }
+
     // Listar fichas
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
