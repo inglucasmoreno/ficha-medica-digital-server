@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { ITurno } from './interface/turno.interface';
 import * as mongoose  from 'mongoose';
 import { TurnoDTO } from './dto/turno.dto';
+import { add } from 'date-fns';
 
 @Injectable()
 export class TurnosService {
@@ -78,10 +79,31 @@ export class TurnosService {
   // Listar turnos
   async listarTurnos(querys: any): Promise<ITurno[]> {
       
-    const {columna, direccion} = querys;
+    const {columna, direccion, fecha, usuario} = querys;
 
     const pipeline = [];
-    pipeline.push({$match:{}});
+
+    // Filtrado por usuario
+    if(usuario.trim() !== ''){
+      console.log('Filtrando por usuario');
+      const idUsuario = new mongoose.Types.ObjectId(usuario);
+      pipeline.push({$match:{ profesional: idUsuario}});
+    }else{
+      pipeline.push({$match:{}});
+    }    
+
+    // Filtrado por fecha
+    if(fecha){
+      let fechaSeleccionada = new Date(fecha); 
+      let fechaHasta = add(new Date(fecha), { days: 1 });
+
+      console.log(fechaSeleccionada);
+      console.log(fechaHasta);
+      
+      pipeline.push({$match:{}});
+    }else{
+      pipeline.push({$match:{}});
+    }
 
     // Informacion de ficha
     pipeline.push({
