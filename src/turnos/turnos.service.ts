@@ -85,7 +85,6 @@ export class TurnosService {
 
     // Filtrado por usuario
     if(usuario.trim() !== ''){
-      console.log('Filtrando por usuario');
       const idUsuario = new mongoose.Types.ObjectId(usuario);
       pipeline.push({$match:{ profesional: idUsuario}});
     }else{
@@ -94,13 +93,13 @@ export class TurnosService {
 
     // Filtrado por fecha
     if(fecha){
+
       let fechaSeleccionada = new Date(fecha); 
       let fechaHasta = add(new Date(fecha), { days: 1 });
-
-      console.log(fechaSeleccionada);
-      console.log(fechaHasta);
       
-      pipeline.push({$match:{}});
+      pipeline.push({$match:{ fecha_turno: { $gte: new Date(fechaSeleccionada) } }});
+      pipeline.push({$match:{ fecha_turno: { $lte: new Date(fechaHasta) } }});
+
     }else{
       pipeline.push({$match:{}});
     }
