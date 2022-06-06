@@ -94,8 +94,9 @@ export class TurnosService {
     // Filtrado por fecha
     if(fecha){
 
-      let fechaSeleccionada = new Date(fecha); 
-      let fechaHasta = add(new Date(fecha), { days: 1 });
+      // Se compensa la diferencia horaria en el back sumando 3 horas a las fechas limites
+      let fechaSeleccionada = add(new Date(fecha), { hours: 3 }); 
+      let fechaHasta = add(new Date(fecha), { days: 1, hours: 3 });
       
       pipeline.push({$match:{ fecha_turno: { $gte: new Date(fechaSeleccionada) } }});
       pipeline.push({$match:{ fecha_turno: { $lte: new Date(fechaHasta) } }});
