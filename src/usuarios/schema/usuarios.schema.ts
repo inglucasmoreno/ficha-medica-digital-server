@@ -1,5 +1,5 @@
 
-import { Schema } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 
 export const usuarioSchema = new Schema({
    
@@ -32,6 +32,12 @@ export const usuarioSchema = new Schema({
     password: {
         type: String,
         require: 'El password es un campo obligatorio',
+        trim: true
+    },
+
+    tipo_medico: {
+        type: Schema.Types.ObjectId,
+        default: null,
         trim: true
     },
 

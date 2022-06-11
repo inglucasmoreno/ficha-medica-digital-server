@@ -6,6 +6,7 @@ export interface IUsuario extends Document {
     readonly apellido: string;
     readonly nombre: string;
     password: string;
+    readonly tipo_medico: string;
     readonly email: string;
     readonly role: string;
     readonly permisos: [];

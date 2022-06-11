@@ -217,7 +217,8 @@ export class FichasService {
       var document = {
         html: html,
         data: {
-          fichas: data
+          fichas: data,
+          fecha: format(new Date(), 'dd/MM/yyyy')
         },
         path: this.url_destino_pdf_reporte_fichas,
         type: ""

@@ -42,7 +42,7 @@ export class UsuariosController {
     }
 
     // Crear usuario
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
     @ApiCreatedResponse({ description: 'Usuario creado correctamente' })
     @ApiUnauthorizedResponse({ description: 'El usuario no esta autorizado para realizar esta accion' })

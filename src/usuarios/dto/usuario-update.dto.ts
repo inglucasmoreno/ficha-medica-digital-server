@@ -17,6 +17,9 @@ export class UsuarioUpdateDTO {
     @ApiProperty({ type: String, description: 'Contraseña de acceso al sistema' })
     password: string;
     
+    @ApiProperty({ type: String, description: 'Tipo de medico (Para usuarios de tipo medico)' })
+    readonly tipo_medico: string;
+
     @ApiProperty({ type: String, description: 'Correo electronico' })
     readonly email: string;
     

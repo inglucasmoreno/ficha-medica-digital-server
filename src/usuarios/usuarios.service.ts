@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UsuarioDTO } from './dto/usuarios.dto';
+import * as mongoose  from 'mongoose';
 import { IUsuario } from './interface/usuarios.interface';
 import { UsuarioUpdateDTO } from './dto/usuario-update.dto';
 
@@ -14,9 +15,27 @@ export class UsuariosService {
     
     // Usuario por ID
     async getUsuario(id: string): Promise<IUsuario> {
-        const usuario = await this.usuariosModel.findById(id);
-        if(!usuario) throw new NotFoundException('El usuario no existe');
-        return usuario;
+
+        let pipeline = [];
+
+        pipeline.push({$match:{_id: new mongoose.Types.ObjectId(id)}})
+
+        // Informacion de usuario actualizador
+        pipeline.push({
+            $lookup: { // Lookup
+                from: 'tipo-medico',
+                localField: 'tipo_medico',
+                foreignField: '_id',
+                as: 'tipo_medico'
+            }}
+        );
+    
+        pipeline.push({ $unwind: '$tipo_medico' });
+
+        const usuario = await this.usuariosModel.aggregate(pipeline);
+
+        if(!usuario[0]) throw new NotFoundException('El usuario no existe');
+        return usuario[0];
     }  
 
     // Usuario por nombre de usuario
@@ -42,11 +61,31 @@ export class UsuariosService {
         
         const {columna, direccion} = querys;
 
-        // Ordenar
-        let ordenar = [columna || 'apellido', direccion || 1];
+        let pipeline = [];
 
-        const usuarios = await this.usuariosModel.find()
-                                                 .sort([ordenar]);
+        pipeline.push({$match: {}});
+
+        // Informacion de usuario actualizador
+        pipeline.push({
+            $lookup: { // Lookup
+                from: 'tipo-medico',
+                localField: 'tipo_medico',
+                foreignField: '_id',
+                as: 'tipo_medico'
+            }}
+        );
+    
+        pipeline.push({ $unwind: '$tipo_medico' });
+
+        // Ordenando datos
+        const ordenar: any = {};
+        if(columna){
+            ordenar[String(columna)] = Number(direccion);
+            pipeline.push({$sort: ordenar});
+        }     
+
+        const usuarios = await this.usuariosModel.aggregate(pipeline);
+
         return usuarios;
     }  
 
