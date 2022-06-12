@@ -175,7 +175,7 @@ export class TurnosService {
     pipeline.push({$match: { 
       activo: true, 
       confirmacion: false, 
-      createdAt: { $lte: new Date(format(fechaHoy, 'yyyy-MM-dd')) } 
+      fecha_turno: { $lte: add(new Date(format(fechaHoy, 'yyyy-MM-dd')),{ hours: 3 })} 
     }});
 
     // Se listan los turnos antiguos
