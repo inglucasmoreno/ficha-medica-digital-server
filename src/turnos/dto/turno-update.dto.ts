@@ -11,8 +11,11 @@ export class TurnoUpdateDTO {
     @ApiProperty({ type: String, required: true, description: 'Fecha del turno' })
     readonly fecha_turno: string;
 
-    @ApiProperty({ type: String, required: true, description: 'Confirmacion del turno' })
-    readonly confirmacion: string;
+    @ApiProperty({ type: Boolean, required: true, description: 'Confirmacion del turno' })
+    readonly confirmacion: boolean;
+
+    @ApiProperty({ type: Boolean, description: 'Turno vencido' })
+    readonly vencido: boolean;
 
     @ApiProperty({ type: String, description: 'Usuario creador' })
     readonly creatorUser: string;

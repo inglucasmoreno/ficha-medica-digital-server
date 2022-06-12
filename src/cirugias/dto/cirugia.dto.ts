@@ -15,7 +15,6 @@ export class CirugiaDTO {
     @ApiProperty({ type: Date, required: true, description: 'Fecha de realizacion' })
     readonly fecha_realizacion: Date;
 
-    @IsNotEmpty()
     @ApiProperty({ type: String, required: true, description: 'Fecha de realizacion' })
     readonly institucion: string;
 

@@ -5,6 +5,7 @@ export interface ITurno extends Document {
   readonly profesional: string;
   readonly fecha_turno: Date;
   readonly confirmacion: boolean;
+  readonly vencido: boolean;
   readonly creatorUser: Date;
   readonly updatorUser: Date;
   readonly activo: boolean;

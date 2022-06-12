@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { ITurno } from './interface/turno.interface';
 import * as mongoose  from 'mongoose';
 import { TurnoDTO } from './dto/turno.dto';
-import { add } from 'date-fns';
+import { add, format } from 'date-fns';
 
 @Injectable()
 export class TurnosService {
@@ -165,6 +165,36 @@ export class TurnosService {
     return turnos;
 
   }  
+
+  // Baja de turnos vencidos
+  async turnosVencidos(): Promise<ITurno[]> {
+    
+    const pipeline = [];
+    const fechaHoy = new Date(); 
+
+    pipeline.push({$match: { 
+      activo: true, 
+      confirmacion: false, 
+      createdAt: { $lte: new Date(format(fechaHoy, 'yyyy-MM-dd')) } 
+    }});
+
+    // Se listan los turnos antiguos
+    // pipeline.push({$match:{ createdAt: { $lte: new Date(format(fechaHoy, 'yyyy-MM-dd')) } }});
+    const turnos = await this.turnosModel.aggregate(pipeline);
+
+    // Se colocan como turnos vencidos
+    if(turnos.length !== 0){
+      turnos.forEach( async turno => {
+        await this.turnosModel.findByIdAndUpdate(turno._id, {
+          vencido: true,
+          activo: false  
+        });  
+      });
+    } 
+
+    return turnos;
+
+    }
 
   // Crear turno
   async crearTurno(turnoDTO: TurnoDTO): Promise<ITurno> {

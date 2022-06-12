@@ -25,6 +25,11 @@ export const turnoSchema = new Schema({
       default: false
     },
 
+    vencido: {
+      type: Boolean,
+      default: false
+    },
+    
     creatorUser: {
         type: Schema.Types.ObjectId,
         ref: 'usuario',

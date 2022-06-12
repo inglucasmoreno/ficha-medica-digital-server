@@ -24,7 +24,7 @@ export const cirugiasSchema = new Schema({
     institucion: {
       type: String,
       uppercase: true,
-      required: true
+      default: ''
     },
 
     creatorUser: {
