@@ -25,7 +25,7 @@ export class AuthService {
 
     // Login
     async login(user: any){
-        this.logger.error('Probando Winston');
+        // this.logger.error('Probando Winston');
         const payload = {
             userId: String(user._doc._id),
             usuario: user._doc.usuario,
