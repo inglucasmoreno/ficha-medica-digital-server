@@ -11,6 +11,9 @@ export class TurnoUpdateDTO {
     @ApiProperty({ type: String, required: true, description: 'Fecha del turno' })
     readonly fecha_turno: string;
 
+    @ApiProperty({ type: Boolean, description: 'Cancelacion del turno' })
+    readonly cancelado: boolean;
+
     @ApiProperty({ type: Boolean, required: true, description: 'Confirmacion del turno' })
     readonly confirmacion: boolean;
 

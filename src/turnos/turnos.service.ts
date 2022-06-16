@@ -164,6 +164,78 @@ export class TurnosService {
     
     return turnos;
 
+  }
+
+  // Listar turnos por ficha
+  async listarTurnosPorFicha(querys: any): Promise<ITurno[]> {
+      
+    const {columna, direccion, ficha } = querys;
+
+    const pipeline = [];
+
+    // Turno por ficha
+    const idFicha = new mongoose.Types.ObjectId(ficha);
+    pipeline.push({ $match:{ ficha: idFicha } }) 
+
+    // Informacion de ficha
+    pipeline.push({
+      $lookup: { // Lookup
+          from: 'fichas',
+          localField: 'ficha',
+          foreignField: '_id',
+          as: 'ficha'
+      }}
+    );
+
+    pipeline.push({ $unwind: '$ficha' });
+
+    // Informacion de profesional
+    pipeline.push({
+      $lookup: { // Lookup
+          from: 'usuarios',
+          localField: 'profesional',
+          foreignField: '_id',
+          as: 'profesional'
+      }}
+    );
+
+    pipeline.push({ $unwind: '$profesional' });
+
+    // Informacion de usuario creador
+    pipeline.push({
+      $lookup: { // Lookup
+          from: 'usuarios',
+          localField: 'creatorUser',
+          foreignField: '_id',
+          as: 'creatorUser'
+      }}
+    );
+
+    pipeline.push({ $unwind: '$creatorUser' });
+
+    // Informacion de usuario actualizador
+    pipeline.push({
+      $lookup: { // Lookup
+        from: 'usuarios',
+        localField: 'updatorUser',
+        foreignField: '_id',
+        as: 'updatorUser'
+      }}
+    );
+
+    pipeline.push({ $unwind: '$updatorUser' });
+
+    // Ordenando datos
+    const ordenar: any = {};
+    if(columna){
+        ordenar[String(columna)] = Number(direccion);
+        pipeline.push({$sort: ordenar});
+    }      
+
+    const turnos = await this.turnosModel.aggregate(pipeline);
+    
+    return turnos;
+  
   }  
 
   // Baja de turnos vencidos

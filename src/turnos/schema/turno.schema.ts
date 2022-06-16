@@ -20,6 +20,11 @@ export const turnoSchema = new Schema({
       required: true
     },
 
+    cancelado: {
+      type: Boolean,
+      default: false
+    },
+
     confirmacion: {
       type: Boolean,
       default: false

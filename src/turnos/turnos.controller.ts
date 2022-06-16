@@ -39,6 +39,20 @@ export class TurnosController {
         });
     }
 
+    // Listar turnos por ficha
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @ApiOkResponse({ description: 'Listado de turnos correcto' })
+    @ApiUnauthorizedResponse({ description: 'El usuario no esta autorizado para realizar esta accion' })
+    @Get('/filtrado/ficha')
+    async listarTurnosPorFicha(@Res() res, @Query() querys) {
+        const turnos = await this.turnosService.listarTurnosPorFicha(querys);
+        res.status(HttpStatus.OK).json({
+            message: 'Listado de turnos correcto',
+            turnos
+        });
+    }
+
     // Crear turnos
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
@@ -70,7 +84,6 @@ export class TurnosController {
         });
 
     }
-
 
     // Actualizar turno
     @UseGuards(JwtAuthGuard)
