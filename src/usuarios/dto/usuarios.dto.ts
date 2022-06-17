@@ -26,13 +26,16 @@ export class UsuarioDTO {
     @ApiProperty({ type: String, description: 'Tipo de medico (Para usuarios de tipo medico)' })
     readonly tipo_medico: string;
 
+    @ApiProperty({ type: String, description: 'Dias laborales (Para usuarios de tipo medico)' })
+    readonly dias_laborales: string;
+
     @ApiProperty({ type: String, description: 'Correo electronico' })
     readonly email: string;
     
     @ApiProperty({ type: String, description: 'Rol dentro del sistema' })
     readonly role: string;
     
-    @ApiProperty({ type: 'Array', description: 'Permisos de usuario'})
+    @ApiProperty({ type: Array, description: 'Permisos de usuario'})
     readonly permisos: []
 
     @ApiProperty({ type: Boolean, default: true, description: 'Usuario activo o inactivo' })

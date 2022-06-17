@@ -41,6 +41,11 @@ export const usuarioSchema = new Schema({
         trim: true
     },
 
+    dias_laborales: {
+        type: Array,
+        default: [],
+    },
+
     email: {
         type: String,
         lowercase: true,

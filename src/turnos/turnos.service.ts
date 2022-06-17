@@ -266,7 +266,7 @@ export class TurnosService {
 
     return turnos;
 
-    }
+  }
 
   // Crear turno
   async crearTurno(turnoDTO: TurnoDTO): Promise<ITurno> {
