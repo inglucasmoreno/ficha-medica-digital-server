@@ -19,6 +19,7 @@ import { CirugiasModule } from './cirugias/cirugias.module';
 import { EstudiosModule } from './estudios/estudios.module';
 import { TurnosModule } from './turnos/turnos.module';
 import { TipoMedicoModule } from './tipo-medico/tipo-medico.module';
+import { HistorialDiasLaboralesModule } from './historial-dias-laborales/historial-dias-laborales.module';
 
 @Module({
   imports: [
@@ -46,7 +47,7 @@ import { TipoMedicoModule } from './tipo-medico/tipo-medico.module';
     UsuariosModule, 
     AuthModule,
     InicializacionModule,  // Para inicializacion de tablas - Configurable en el controlador/servicio
-    SocketModule, FichasModule, NotasConsultaModule, AntecedentesModule, AlergiasModule, CirugiasModule, EstudiosModule, TurnosModule, TipoMedicoModule,          // Para trabajar con WebSocket
+    SocketModule, FichasModule, NotasConsultaModule, AntecedentesModule, AlergiasModule, CirugiasModule, EstudiosModule, TurnosModule, TipoMedicoModule, HistorialDiasLaboralesModule,          // Para trabajar con WebSocket
     
   ],
   
