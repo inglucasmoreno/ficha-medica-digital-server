@@ -268,6 +268,94 @@ export class TurnosService {
 
   }
 
+  // Reporte de turnos
+  async reporteTurnos(querys: any): Promise<ITurno[]> {
+    
+    const {columna, direccion, ficha, profesional, operador, fechaDesde, FechasHasta } = querys;
+
+    const pipeline = [];
+
+    // Turnos por ficha
+    if(ficha !== ''){
+      const idFicha = new mongoose.Types.ObjectId(ficha);
+      pipeline.push({ $match:{ ficha: idFicha } }) 
+    }
+
+    // Turnos por profesional
+    if(profesional !== ''){
+      const idProfesional = new mongoose.Types.ObjectId(profesional);
+      pipeline.push({ $match:{ profesional: idProfesional } }) 
+    }
+
+    // Turnos por operados
+    if(operador !== ''){
+      const idOperador = new mongoose.Types.ObjectId(operador);
+      pipeline.push({ $match:{ creatorUser: idOperador } }) 
+    }
+
+    // Informacion de ficha
+    pipeline.push({
+      $lookup: { // Lookup
+          from: 'fichas',
+          localField: 'ficha',
+          foreignField: '_id',
+          as: 'ficha'
+      }}
+    );
+
+    pipeline.push({ $unwind: '$ficha' });
+
+
+    // Informacion de profesional
+    pipeline.push({
+      $lookup: { // Lookup
+          from: 'usuarios',
+          localField: 'profesional',
+          foreignField: '_id',
+          as: 'profesional'
+      }}
+    );
+
+    pipeline.push({ $unwind: '$profesional' });
+
+    // Informacion de usuario creador
+    pipeline.push({
+      $lookup: { // Lookup
+          from: 'usuarios',
+          localField: 'creatorUser',
+          foreignField: '_id',
+          as: 'creatorUser'
+      }}
+    );
+
+    pipeline.push({ $unwind: '$creatorUser' });
+
+    // Informacion de usuario actualizador
+    pipeline.push({
+      $lookup: { // Lookup
+        from: 'usuarios',
+        localField: 'updatorUser',
+        foreignField: '_id',
+        as: 'updatorUser'
+      }}
+    );
+
+    pipeline.push({ $unwind: '$updatorUser' });
+
+    // Ordenando datos
+    const ordenar: any = {};
+    if(columna){
+        ordenar[String(columna)] = Number(direccion);
+        pipeline.push({$sort: ordenar});
+    }      
+
+    const turnos = await this.turnosModel.aggregate(pipeline);
+    
+    return turnos;  
+  
+  }
+
+
   // Crear turno
   async crearTurno(turnoDTO: TurnoDTO): Promise<ITurno> {
       const nuevoTurno = new this.turnosModel(turnoDTO);
@@ -279,5 +367,6 @@ export class TurnosService {
       const turno = await this.turnosModel.findByIdAndUpdate(id, turnoUpdateDTO, {new: true});
       return turno;
   }
+
 
 }

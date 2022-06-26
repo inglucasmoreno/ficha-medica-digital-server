@@ -99,48 +99,48 @@ export class FichasService {
 
   } 
 
-    // Listar fichas 
-    async listarFichas(querys: any): Promise<IFicha[]> {
-        
-        const {columna, direccion} = querys;
+  // Listar fichas 
+  async listarFichas(querys: any): Promise<IFicha[]> {
+      
+      const {columna, direccion} = querys;
 
-        const pipeline = [];
-        pipeline.push({$match:{}});
-  
-        // Informacion de usuario creador
-        pipeline.push({
-          $lookup: { // Lookup
-              from: 'usuarios',
-              localField: 'creatorUser',
-              foreignField: '_id',
-              as: 'creatorUser'
-          }}
-        );
-  
-        pipeline.push({ $unwind: '$creatorUser' });
-  
-        // Informacion de usuario actualizador
-        pipeline.push({
-          $lookup: { // Lookup
+      const pipeline = [];
+      pipeline.push({$match:{}});
+
+      // Informacion de usuario creador
+      pipeline.push({
+        $lookup: { // Lookup
             from: 'usuarios',
-            localField: 'updatorUser',
+            localField: 'creatorUser',
             foreignField: '_id',
-            as: 'updatorUser'
-          }}
-        );
-  
-        pipeline.push({ $unwind: '$updatorUser' });
-  
-        // Ordenando datos
-        const ordenar: any = {};
-        if(columna){
-            ordenar[String(columna)] = Number(direccion);
-            pipeline.push({$sort: ordenar});
-        }      
-  
-        const fichas = await this.fichaModel.aggregate(pipeline);
-        
-        return fichas;
+            as: 'creatorUser'
+        }}
+      );
+
+      pipeline.push({ $unwind: '$creatorUser' });
+
+      // Informacion de usuario actualizador
+      pipeline.push({
+        $lookup: { // Lookup
+          from: 'usuarios',
+          localField: 'updatorUser',
+          foreignField: '_id',
+          as: 'updatorUser'
+        }}
+      );
+
+      pipeline.push({ $unwind: '$updatorUser' });
+
+      // Ordenando datos
+      const ordenar: any = {};
+      if(columna){
+          ordenar[String(columna)] = Number(direccion);
+          pipeline.push({$sort: ordenar});
+      }      
+
+      const fichas = await this.fichaModel.aggregate(pipeline);
+      
+      return fichas;
 
     }  
 
@@ -188,8 +188,7 @@ export class FichasService {
         return ficha;
         
     }
-
-    
+ 
     // Imprimir fichas
     async reporteFichas(data: any): Promise<String> {
 
@@ -228,6 +227,6 @@ export class FichasService {
       await pdf.create(document, options);
 
       return 'Reporte generado correctamente'
-    }
+  }
     
 }

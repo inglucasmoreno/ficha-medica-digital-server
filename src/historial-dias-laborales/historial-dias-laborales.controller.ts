@@ -48,10 +48,10 @@ export class HistorialDiasLaboralesController {
   @ApiUnauthorizedResponse({ description: 'El usuario no esta autorizado para realizar esta accion' })
   @Get('/usuario/:id')
   async listarHistorialPorUsuario(@Res() res, @Query() querys, @Param('id') usuarioId) {
-      const historial = await this.historialDiasLaboralesService.listarHistorialPorUsuario(usuarioId, querys);
+      const historiales = await this.historialDiasLaboralesService.listarHistorialPorUsuario(usuarioId, querys);
       res.status(HttpStatus.OK).json({
           message: 'Historial correcto',
-          historial
+          historiales
       });
   }
 

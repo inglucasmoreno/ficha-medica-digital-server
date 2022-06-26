@@ -32,6 +32,7 @@ export class TurnosController {
     @ApiUnauthorizedResponse({ description: 'El usuario no esta autorizado para realizar esta accion' })
     @Get('/')
     async listarTurnos(@Res() res, @Query() querys) {
+        console.log(querys);
         const turnos = await this.turnosService.listarTurnos(querys);
         res.status(HttpStatus.OK).json({
             message: 'Listado de turnos correcto',
@@ -47,6 +48,20 @@ export class TurnosController {
     @Get('/filtrado/ficha')
     async listarTurnosPorFicha(@Res() res, @Query() querys) {
         const turnos = await this.turnosService.listarTurnosPorFicha(querys);
+        res.status(HttpStatus.OK).json({
+            message: 'Listado de turnos correcto',
+            turnos
+        });
+    }
+
+    // Reporte de turnos
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @ApiOkResponse({ description: 'Listado de turnos correcto' })
+    @ApiUnauthorizedResponse({ description: 'El usuario no esta autorizado para realizar esta accion' })
+    @Get('/seccion/reportes/finales')
+    async reporteTurnos(@Res() res, @Query() querys) {
+        const turnos = await this.turnosService.reporteTurnos(querys);
         res.status(HttpStatus.OK).json({
             message: 'Listado de turnos correcto',
             turnos
