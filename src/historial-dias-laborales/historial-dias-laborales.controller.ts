@@ -20,7 +20,6 @@ export class HistorialDiasLaboralesController {
   @Get('/:id')
   async getHistorial(@Res() res, @Param('id') historialID) {
       const historial = await this.historialDiasLaboralesService.getHistorial(historialID);
-      console.log(historial);
       res.status(HttpStatus.OK).json({
           message: 'Historial obtenido correctamente',
           historial

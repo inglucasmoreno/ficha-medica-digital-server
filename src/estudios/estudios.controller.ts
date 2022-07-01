@@ -33,7 +33,6 @@ export class EstudiosController {
   @Get('/')
   async listarEstudios(@Res() res, @Query() querys) {
       const estudios = await this.estudiosService.listarEstudios(querys);
-      console.log(estudios);
       res.status(HttpStatus.OK).json({
           message: 'Listado de estudios correcto',
           estudios

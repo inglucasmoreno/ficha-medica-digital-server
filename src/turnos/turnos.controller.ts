@@ -32,7 +32,6 @@ export class TurnosController {
     @ApiUnauthorizedResponse({ description: 'El usuario no esta autorizado para realizar esta accion' })
     @Get('/')
     async listarTurnos(@Res() res, @Query() querys) {
-        console.log(querys);
         const turnos = await this.turnosService.listarTurnos(querys);
         res.status(HttpStatus.OK).json({
             message: 'Listado de turnos correcto',
