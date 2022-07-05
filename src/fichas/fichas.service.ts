@@ -208,8 +208,8 @@ export class FichasService {
 
       // Cambio de formato de fechas
       data.map( ficha => {
-        ficha.fecha_alta_string = format(add(new Date(ficha.createdAt),{hours: 5}),'dd/MM/yyyy');
-        ficha.fecha_nacimiento_string = format(add(new Date(ficha.fecha_nacimiento),{hours: 5}),'dd/MM/yyyy');
+        ficha.fecha_alta_string = format(add(new Date(ficha.createdAt),{hours: 3}),'dd/MM/yyyy');
+        ficha.fecha_nacimiento_string = format(add(new Date(ficha.fecha_nacimiento),{hours: 3}),'dd/MM/yyyy');
       })
 
       // Configuraciones de documento

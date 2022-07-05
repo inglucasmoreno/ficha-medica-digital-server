@@ -1,8 +1,7 @@
 import { Document } from 'mongoose';
 
 export interface IFicha extends Document {
-    readonly apellido: string;
-    readonly nombre: string;
+    readonly apellido_nombre: string;
     readonly dni: string;
     readonly nro_afiliado: string;
     readonly fecha_nacimiento: Date;

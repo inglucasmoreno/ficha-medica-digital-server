@@ -3,14 +3,7 @@ import { Schema } from 'mongoose';
 
 export const fichaSchema = new Schema({
    
-    apellido: {
-        type: String,
-        required: true,
-        uppercase: true,
-        trim: true
-    },
-
-    nombre: {
+    apellido_nombre: {
         type: String,
         required: true,
         uppercase: true,

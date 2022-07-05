@@ -3,11 +3,8 @@ import { Date } from "mongoose";
 
 export class FichaUpdateDTO {
     
-    @ApiProperty({ type: String, required: true, description: 'Apellido de la persona' })
-    readonly apellido: string;
-    
-    @ApiProperty({ type: String, required: true, description: 'Nombre de la persona' })
-    readonly nombre: string;
+    @ApiProperty({ type: String, required: true, description: 'Apellido y nombre de la persona' })
+    readonly apellido_nombre: string;
     
     @ApiProperty({ type: String, required: true, description: 'DNI de la persona' })
     readonly dni: string;
