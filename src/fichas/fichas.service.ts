@@ -192,6 +192,8 @@ export class FichasService {
     // Imprimir fichas
     async reporteFichas(data: any): Promise<String> {
 
+      console.log('Llega a generar');
+
       // Tempalte
       var html = fs.readFileSync(this.url_template_reporte_fichas, 'utf-8')
 

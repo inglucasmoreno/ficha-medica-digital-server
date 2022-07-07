@@ -1,5 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import * as bodyParser from 'body-parser';
 
 // Winston - LOG
 import { WinstonModule } from 'nest-winston';
@@ -9,6 +10,7 @@ import * as  winston from 'winston';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
+import { json, urlencoded } from 'express';
 
 
 async function bootstrap() {
@@ -44,6 +46,10 @@ async function bootstrap() {
     })
   });
   
+  // Incrementar el limite de parser a 50mb
+  app.use(json({limit: '50mb'}));
+  app.use(urlencoded({ extended: true, limit: '50mb' }));
+
   // Configuracion de CORS
   app.enableCors();
 
