@@ -1,11 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class AntecedenteUpdateDTO {
+export class MedicamentosUpdateDTO {
     
-    @ApiProperty({ type: String, description: 'Identificador de ficha' })
-    readonly ficha: string;
-
-    @ApiProperty({ type: String, description: 'Descripcion del antecedente' })
+    @ApiProperty({ type: String, description: 'Descripcion del medicamento' })
     readonly descripcion: string;
 
     @ApiProperty({ type: String, description: 'Usuario creador' })
