@@ -6,6 +6,7 @@ import * as XLSX from 'xlsx';
 import { IUsuario } from 'src/usuarios/interface/usuarios.interface';
 import { ITipoMedico } from 'src/tipo-medico/interface/tipo-medico.interface';
 import { IFicha } from 'src/fichas/interface/ficha.interface';
+import { IMedicosExternos } from 'src/medicos-externos/interface/medicos-externos.interface';
 
 @Injectable()
 export class InicializacionService {
@@ -13,7 +14,8 @@ export class InicializacionService {
     constructor(
         @InjectModel('Usuario') private readonly usuarioModel: Model<IUsuario>,
         @InjectModel('TipoMedico') private readonly tipoMedicoModel: Model<ITipoMedico>,
-        @InjectModel('Ficha') private readonly fichaModel: Model<IFicha>
+        @InjectModel('Ficha') private readonly fichaModel: Model<IFicha>,
+        @InjectModel('MedicosExternos') private readonly medicosExternosModel: Model<IMedicosExternos>,
     ){}
 
     async initUsuarios(): Promise<any> {
@@ -53,7 +55,41 @@ export class InicializacionService {
 
         const tipo = new this.tipoMedicoModel(dataTipo);
         await tipo.save();
+
+        // 4) - Se crea el usuario externo especial - Sin medico
+
+        const dataExternoEspecial = {
+            _id: '000000000000000000000000',
+            apellido: 'SIN MEDICO',
+            nombre: 'SIN MEDICO',
+            creatorUser: usuarioDB._id,
+            updatorUser: usuarioDB._id
+        } 
+
+        const externoEspecial = new this.medicosExternosModel(dataExternoEspecial);
+        await externoEspecial.save();
+
+        // 5) - Usuario especial - Sin usuario
+        const dataUsuarioEspecial: any = {
+            _id: '000000000000000000000000',
+            usuario: 'sin-usuario',
+            apellido: 'Sin usuario',
+            nombre: 'Sin usuario',
+            dni: '34060400',
+            email: 'sinusuario@gmail.com',
+            role: 'ADMIN_ROLE',
+            tipo_medico: '000000000000000000000000', // ID de inicializacion
+            activo: false
+        }
     
+        // Generacion de password encriptado
+        const saltEspecial = bcryptjs.genSaltSync();
+        data.password = bcryptjs.hashSync('admin', saltEspecial);
+    
+        // Se crea y se almacena en la base de datos al usuario especial
+        const usuarioEspecial = new this.usuarioModel(dataUsuarioEspecial);
+        await usuarioEspecial.save();
+
     }
 
     // Se importan fichas desde un documento de excel
