@@ -76,4 +76,19 @@ export class AutorizacionesMedicamentosController {
 
     }
 
+    // Calculos iniciales por ficha
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @ApiOkResponse({ description: 'Autorizaciones obtenidas correctamente' })
+    @ApiUnauthorizedResponse({ description: 'El usuario no esta autorizado para realizar esta accion' })
+    @ApiParam({name: 'id', required: true, description: 'Identificador de ficha', type: 'string'})
+    @Get('/calculos-iniciales/:id')
+    async getAutorizacion2(@Res() res,@Query() querys, @Param('id') fichaID) {
+        const resultados = await this.autorizacionesMedicamentosService.calculosIniciales(fichaID, querys);
+        res.status(HttpStatus.OK).json({
+            message: 'Autorizacion obtenida correctamente',
+            resultados
+        });
+    }
+
 }

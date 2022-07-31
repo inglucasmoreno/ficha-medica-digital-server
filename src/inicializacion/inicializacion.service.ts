@@ -63,7 +63,8 @@ export class InicializacionService {
             apellido: 'SIN MEDICO',
             nombre: 'SIN MEDICO',
             creatorUser: usuarioDB._id,
-            updatorUser: usuarioDB._id
+            updatorUser: usuarioDB._id,
+            activo: false
         } 
 
         const externoEspecial = new this.medicosExternosModel(dataExternoEspecial);
