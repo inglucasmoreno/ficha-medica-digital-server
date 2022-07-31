@@ -313,9 +313,9 @@ export class AutorizacionesMedicamentosService {
             medicamentos, 
             autorizaciones 
         ] = await Promise.all([
-            this.medicosExternosModel.find({ activo: true }),
-            this.usuariosModel.find({ role: 'DOCTOR_ROLE', activo: true }),
-            this.medicamentosModel.find({ activo: true }),
+            this.medicosExternosModel.find({ activo: true }).sort({ apellido: 1 }),
+            this.usuariosModel.find({ role: 'DOCTOR_ROLE', activo: true }).sort({ apellido: 1 }),
+            this.medicamentosModel.find({ activo: true }).sort({ descripcion: 1 }),
             this.autorizacionesMedicamentosModel.aggregate(pipeline),
         ]);
         

@@ -7,7 +7,7 @@ export interface IAutorizacionesMedicamentos extends Document {
   readonly profesional_tipo: string;
   readonly diagnostico: string;
   readonly medicamento: string;
-  readonly cantidad: string;
+  readonly cantidad: number;
   readonly creatorUser: Date;
   readonly updatorUser: Date;
   readonly activo: boolean;
