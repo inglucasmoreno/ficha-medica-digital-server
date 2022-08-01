@@ -106,10 +106,32 @@ export class AutorizacionesMedicamentosService {
     // Listar autorizaciones
     async listarAutorizaciones(querys: any): Promise<IAutorizacionesMedicamentos[]> {
             
-        const {columna, direccion, ficha} = querys;
-    
+        const {columna, direccion, ficha, medicamento, tipo_profesional, profesional_interno, profesional_externo} = querys;
+
         const pipeline = [];
         pipeline.push({$match:{}});
+
+        // Filtrado por tipo de profesional - Si es necesario
+        if(tipo_profesional === 'Interno' && (!profesional_interno || profesional_interno === '')) pipeline.push({ $match:{ profesional_tipo: 'Interno' } }); 
+        if(tipo_profesional === 'Externo' && (!profesional_externo || profesional_externo === '')) pipeline.push({ $match:{ profesional_tipo: 'Externo' } }); 
+
+        // Filtrado por tipo de profesional = 'Interno' y profesional
+        if(tipo_profesional === 'Interno' && (profesional_interno || profesional_interno !== '')){
+            const idProfesionalInterno = new Types.ObjectId(profesional_interno);
+            pipeline.push({ $match:{ profesional_interno: idProfesionalInterno } }) 
+        }; 
+
+        // Filtrado por tipo de profesional = 'Externo' y profesional
+        if(tipo_profesional === 'Externo' && (profesional_externo || profesional_externo !== '')){
+            const idProfesionalExterno = new Types.ObjectId(profesional_externo);
+            pipeline.push({ $match:{ profesional_externo: idProfesionalExterno } }) 
+        }; 
+
+        // Filtrado por medicamento - Si es necesario
+        if(medicamento && medicamento.trim() !== ''){
+            const idMedicamento = new Types.ObjectId(medicamento);
+            pipeline.push({ $match:{ medicamento: idMedicamento } }) 
+        }
 
         // Filtrado por ficha - Si es necesario
         if(ficha && ficha.trim() !== ''){
