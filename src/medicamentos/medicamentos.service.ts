@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { MedicamentosUpdateDTO } from './dto/medicamentos-update';
 import { MedicamentosDTO } from './dto/medicamentos.dto';
 import { IMedicamentos } from './interface/medicamentos.interface';
 

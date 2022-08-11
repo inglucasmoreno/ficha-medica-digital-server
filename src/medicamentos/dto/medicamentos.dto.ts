@@ -2,7 +2,11 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
 
 export class MedicamentosDTO {
-    
+
+    @IsNotEmpty()
+    @ApiProperty({ type: String, required: true, description: 'Nombre comercial' })
+    readonly nombre_comercial: string;
+
     @IsNotEmpty()
     @ApiProperty({ type: String, required: true, description: 'Descripcion del medicamento' })
     readonly descripcion: string;

@@ -46,4 +46,30 @@ export class InicializacionController {
 
     }
 
+    // Importacion de medicamentos - Archivo excel (.xlsx)
+    @ApiOkResponse({ description: 'Medicamentos importados correctamente' })
+    @UseInterceptors(
+        FileInterceptor(
+            'file',
+            {
+                storage: diskStorage({
+                    destination: './importar',
+                    filename: function(req, file, cb){
+                        cb(null, 'medicamentos.xlsx')
+                    }
+                })
+            }
+        )
+    )
+    @Post('/medicamentos')
+    async importarMedicamentos(@UploadedFile() file: Express.Multer.File, @Query() query: any) {
+        
+        const msg = await this.inicializacionService.importarMedicamentos(query);
+
+        return {
+            msg
+        }
+
+    }
+
 }

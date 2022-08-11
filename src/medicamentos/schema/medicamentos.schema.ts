@@ -3,6 +3,13 @@ import { Schema } from 'mongoose';
 
 export const medicamentosSchema = new Schema({
    
+    nombre_comercial: {
+        type: String,
+        trim: true,
+        uppercase: true,
+        required: true
+    },
+
     descripcion: {
       type: String,
       trim: true,

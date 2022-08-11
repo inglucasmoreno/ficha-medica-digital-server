@@ -7,6 +7,7 @@ import { IUsuario } from 'src/usuarios/interface/usuarios.interface';
 import { ITipoMedico } from 'src/tipo-medico/interface/tipo-medico.interface';
 import { IFicha } from 'src/fichas/interface/ficha.interface';
 import { IMedicosExternos } from 'src/medicos-externos/interface/medicos-externos.interface';
+import { IMedicamentos } from 'src/medicamentos/interface/medicamentos.interface';
 
 @Injectable()
 export class InicializacionService {
@@ -16,6 +17,7 @@ export class InicializacionService {
         @InjectModel('TipoMedico') private readonly tipoMedicoModel: Model<ITipoMedico>,
         @InjectModel('Ficha') private readonly fichaModel: Model<IFicha>,
         @InjectModel('MedicosExternos') private readonly medicosExternosModel: Model<IMedicosExternos>,
+        @InjectModel('Medicamentos') private readonly medicamentosModel: Model<IMedicamentos>,
     ){}
 
     async initUsuarios(): Promise<any> {
@@ -140,6 +142,60 @@ export class InicializacionService {
 
         if(registrosCargados === 0){
             return 'La base de fichas ya se encuentra actualizada';
+        }else{
+            return `Cantidad de registros cargados: ${registrosCargados}`
+        }
+
+
+    }
+
+    // Se importan medicamentos desde un documento de excel
+    async importarMedicamentos(query: any): Promise<any> {
+
+        const { usuario } = query;
+        
+        const workbook = XLSX.readFile('./importar/medicamentos.xlsx');
+        const workbookSheets = workbook.SheetNames;
+        const sheet = workbookSheets[0];
+        const dataExcel: any = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
+
+        // Verificacion de formato excel
+        const condicion = dataExcel.length > 0 &&
+                          dataExcel[0].PRINCIPIOACTIVO &&
+                          dataExcel[0].NOMBRECOMERCIAL &&
+                          dataExcel[0].PRESENTACION
+
+        if(!condicion) throw new NotFoundException('Excel con formato incorrecto');
+
+        let registrosCargados = 0;
+
+        for(const medicamentoRec of dataExcel){
+
+            let medicamento: any = medicamentoRec;
+
+            if(medicamento.PRINCIPIOACTIVO && medicamento.NOMBRECOMERCIAL && medicamento.PRESENTACION){
+                
+                const data = {
+                    nombre_comercial: medicamento.NOMBRECOMERCIAL.toUpperCase(),
+                    descripcion: `${medicamento.PRINCIPIOACTIVO.toUpperCase()} - ${medicamento.PRESENTACION.toUpperCase()}`,
+                    creatorUser: usuario,
+                    updatorUser: usuario
+                }
+                
+                const medicamentoDB = await this.medicamentosModel.findOne({ nombre_comercial: medicamento.NOMBRECOMERCIAL.toUpperCase(), descripcion: `${medicamento.PRINCIPIOACTIVO.toUpperCase()} - ${medicamento.PRESENTACION.toUpperCase()}` });
+
+                if(!medicamentoDB){
+                    registrosCargados += 1;
+                    const nuevoMedicamento = new this.medicamentosModel(data);
+                    await nuevoMedicamento.save();        
+                }
+            
+            }
+
+        }              
+
+        if(registrosCargados === 0){
+            return 'La base de medicamentos ya se encuentra actualizada';
         }else{
             return `Cantidad de registros cargados: ${registrosCargados}`
         }

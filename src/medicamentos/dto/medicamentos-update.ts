@@ -1,7 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 export class MedicamentosUpdateDTO {
-    
+
+    @ApiProperty({ type: String, description: 'Nombre comercial' })
+    readonly nombre_comercial: string;
+
     @ApiProperty({ type: String, description: 'Descripcion del medicamento' })
     readonly descripcion: string;
 
