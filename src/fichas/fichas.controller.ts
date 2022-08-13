@@ -48,10 +48,11 @@ export class FichasController {
     @ApiUnauthorizedResponse({ description: 'El usuario no esta autorizado para realizar esta accion' })
     @Get('/')
     async listarFichas(@Res() res, @Query() querys) {
-        const fichas = await this.fichasService.listarFichas(querys);
+        const { fichas, totalItems } = await this.fichasService.listarFichas(querys);
         res.status(HttpStatus.OK).json({
             message: 'Listado de fichas correcta',
-            fichas
+            fichas,
+            totalItems
         });
     }
 

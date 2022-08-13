@@ -100,12 +100,28 @@ export class FichasService {
   } 
 
   // Listar fichas 
-  async listarFichas(querys: any): Promise<IFicha[]> {
+  async listarFichas(querys: any): Promise<any> {
       
-      const {columna, direccion} = querys;
+      const {columna, direccion, desde, registerpp, activo} = querys;
+
+      let filtroActivo = {};
+      if(activo !== '') filtroActivo = { activo: activo === 'true' ? true : false }
 
       const pipeline = [];
       pipeline.push({$match:{}});
+
+      // Ordenando datos
+      const ordenar: any = {};
+      if(columna){
+          ordenar[String(columna)] = Number(direccion);
+          pipeline.push({$sort: ordenar});
+      }     
+
+      // Activo / Inactivo
+      if(activo !== '') pipeline.push({$match: filtroActivo});
+
+      // Paginacion
+      pipeline.push({$skip: Number(desde)}, {$limit: Number(registerpp)});
 
       // Informacion de usuario creador
       pipeline.push({
@@ -131,16 +147,15 @@ export class FichasService {
 
       pipeline.push({ $unwind: '$updatorUser' });
 
-      // Ordenando datos
-      const ordenar: any = {};
-      if(columna){
-          ordenar[String(columna)] = Number(direccion);
-          pipeline.push({$sort: ordenar});
-      }      
-
-      const fichas = await this.fichaModel.aggregate(pipeline);
-      
-      return fichas;
+      const [fichas, totalItems] = await Promise.all([
+        this.fichaModel.aggregate(pipeline),
+        this.fichaModel.find(filtroActivo).countDocuments()
+      ]);
+        
+      return {
+        fichas,
+        totalItems
+      };
 
     }  
 
