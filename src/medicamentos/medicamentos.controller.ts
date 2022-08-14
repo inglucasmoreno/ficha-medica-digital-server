@@ -34,10 +34,11 @@ export class MedicamentosController {
   @ApiUnauthorizedResponse({ description: 'El usuario no esta autorizado para realizar esta accion' })
   @Get('/')
   async listarMedicamentos(@Res() res, @Query() querys) {
-      const medicamentos = await this.medicamentosService.listarMedicamentos(querys);
+      const { medicamentos, totalItems } = await this.medicamentosService.listarMedicamentos(querys);
       res.status(HttpStatus.OK).json({
           message: 'Listado de medicamentos correcto',
-          medicamentos
+          medicamentos,
+          totalItems
       });
   }
 

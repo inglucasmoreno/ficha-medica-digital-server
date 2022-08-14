@@ -52,12 +52,48 @@ export class MedicamentosService {
   } 
 
 // Listar medicamentos
-async listarMedicamentos(querys: any): Promise<IMedicamentos[]> {
+async listarMedicamentos(querys: any): Promise<any> {
       
-    const {columna, direccion} = querys;
+    // Parametros
+    const {columna, 
+      direccion, 
+      desde, 
+      registerpp, 
+      activo, 
+      parametro} = querys;
 
+    // Pipeline
     const pipeline = [];
+    const pipelineTotal = [];
+
+    // Match iniciales
     pipeline.push({$match:{}});
+    pipelineTotal.push({$match:{}});
+
+    // Ordenando datos
+    const ordenar: any = {};
+    if(columna){
+        ordenar[String(columna)] = Number(direccion);
+        pipeline.push({$sort: ordenar});
+    }  
+
+    // Activo / Inactivo
+    let filtroActivo = {};
+    if(activo && activo !== '') {
+      filtroActivo = { activo: activo === 'true' ? true : false };
+      pipeline.push({$match: filtroActivo});
+      pipelineTotal.push({$match: filtroActivo});
+    }
+
+    // Filtro por parametros
+    if(parametro && parametro !== ''){
+      const regex = new RegExp(parametro, 'i');
+      pipeline.push({$match: { $or: [ { nombre_comercial: regex }, { descripcion: regex } ] }});
+      pipelineTotal.push({$match: { $or: [ { nombre_comercial: regex }, { descripcion: regex } ] }});
+    }
+
+    // Paginacion
+    pipeline.push({$skip: Number(desde)}, {$limit: Number(registerpp)});
 
     // Informacion de usuario creador
     pipeline.push({
@@ -83,16 +119,16 @@ async listarMedicamentos(querys: any): Promise<IMedicamentos[]> {
 
     pipeline.push({ $unwind: '$updatorUser' });
 
-    // Ordenando datos
-    const ordenar: any = {};
-    if(columna){
-        ordenar[String(columna)] = Number(direccion);
-        pipeline.push({$sort: ordenar});
-    }      
-
-    const medicamentos = await this.medicamentosModel.aggregate(pipeline);
-    
-    return medicamentos;
+    // Busqueda de medicamentos
+    const [medicamentos, medicamentosTotal] = await Promise.all([
+      this.medicamentosModel.aggregate(pipeline),
+      this.medicamentosModel.aggregate(pipelineTotal),
+    ]);
+  
+    return {
+      medicamentos,
+      totalItems: medicamentosTotal.length
+    };
 
   }  
 

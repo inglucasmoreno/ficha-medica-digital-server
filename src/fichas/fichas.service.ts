@@ -102,13 +102,21 @@ export class FichasService {
   // Listar fichas 
   async listarFichas(querys: any): Promise<any> {
       
-      const {columna, direccion, desde, registerpp, activo} = querys;
+      // Parametros
+      const {columna, 
+             direccion, 
+             desde, 
+             registerpp, 
+             activo, 
+             parametro} = querys;
 
-      let filtroActivo = {};
-      if(activo !== '') filtroActivo = { activo: activo === 'true' ? true : false }
-
+      // Pipelines
       const pipeline = [];
+      const pipelineTotal = [];
+      
+      // Match iniciales
       pipeline.push({$match:{}});
+      pipelineTotal.push({$match:{}});
 
       // Ordenando datos
       const ordenar: any = {};
@@ -118,8 +126,20 @@ export class FichasService {
       }     
 
       // Activo / Inactivo
-      if(activo !== '') pipeline.push({$match: filtroActivo});
+      let filtroActivo = {};
+      if(activo && activo !== '') {
+        filtroActivo = { activo: activo === 'true' ? true : false };
+        pipeline.push({$match: filtroActivo});
+        pipelineTotal.push({$match: filtroActivo});
+      }
 
+      // Filtro por parametros
+      if(parametro && parametro !== ''){
+        const regex = new RegExp(parametro, 'i');
+        pipeline.push({$match: { $or: [ { apellido_nombre: regex }, { dni: regex }, { nro_afiliado: regex } ] }});
+        pipelineTotal.push({$match: { $or: [ { apellido_nombre: regex }, { dni: regex }, { nro_afiliado: regex } ] }});
+      }
+      
       // Paginacion
       pipeline.push({$skip: Number(desde)}, {$limit: Number(registerpp)});
 
@@ -147,14 +167,15 @@ export class FichasService {
 
       pipeline.push({ $unwind: '$updatorUser' });
 
-      const [fichas, totalItems] = await Promise.all([
+      // Busqueda de fichas
+      const [fichas, fichasTotal] = await Promise.all([
         this.fichaModel.aggregate(pipeline),
-        this.fichaModel.find(filtroActivo).countDocuments()
+        this.fichaModel.aggregate(pipelineTotal),
       ]);
-        
+    
       return {
         fichas,
-        totalItems
+        totalItems: fichasTotal.length
       };
 
     }  
