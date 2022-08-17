@@ -5,6 +5,9 @@ export class TurnoUpdateDTO {
     @ApiProperty({ type: String, required: true, description: 'Identificador de ficha' })
     readonly ficha: string;
 
+    @ApiProperty({ type: String, default: '', description: 'Telefono' })
+    readonly telefono: string;
+
     @ApiProperty({ type: String, required: true, description: 'Profesional' })
     readonly profesional: string;
 

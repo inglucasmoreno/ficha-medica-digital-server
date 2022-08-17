@@ -9,12 +9,17 @@ export const turnoSchema = new Schema({
       required: true
     },
 
+    telefono: {
+      type: String,
+      default: ''
+    },
+
     profesional: {
       type: Schema.Types.ObjectId,
       ref: 'usuario',
       required: true
     },
-
+    
     fecha_turno: {
       type: Date,
       required: true
